@@ -813,4 +813,52 @@ CURLcode Curl_set_dns_local_ip6(struct Curl_easy *data,
   return CURLE_NOT_BUILT_IN;
 #endif
 }
+
+
+ares_socket_t easy_asocket(int af, int type, int protocol, void* p)
+{
+    struct Curl_easy* data = (struct Curl_easy*)p;
+    return data->set.dns_socket_functions->asocket(data->set.dns_socket_functions_client, af, type, protocol);
+}
+
+int easy_aclose(ares_socket_t s, void* p)
+{
+    struct Curl_easy* data = (struct Curl_easy*)p;
+    return data->set.dns_socket_functions->aclose(data->set.dns_socket_functions_client, s);
+}
+
+int easy_aconnect(ares_socket_t s, const struct sockaddr* addr, socklen_t len, void* p)
+{
+    struct Curl_easy* data = (struct Curl_easy*)p;
+    return data->set.dns_socket_functions->aconnect(data->set.dns_socket_functions_client, s, addr, len);
+}
+
+ares_ssize_t easy_arecvfrom(ares_socket_t s, void* dst, size_t len, int flags, struct sockaddr* addr, socklen_t* alen, void* p)
+{
+    struct Curl_easy* data = (struct Curl_easy*)p;
+    return data->set.dns_socket_functions->arecvfrom(data->set.dns_socket_functions_client, s, dst, len, flags, addr, (unsigned int*)alen);
+}
+
+ares_ssize_t easy_asendv(ares_socket_t s, const struct iovec* vec, int len, void* p)
+{
+    struct Curl_easy* data = (struct Curl_easy*)p;
+    return data->set.dns_socket_functions->asendv(data->set.dns_socket_functions_client, s, vec, len);
+}
+
+const struct ares_socket_functions cares_socket_functions = {
+  easy_asocket,
+  easy_aclose,
+  easy_aconnect,
+  easy_arecvfrom,
+  easy_asendv
+};
+
+CURLcode Curl_set_dns_socket_functions(struct Curl_easy* data)
+{
+    ares_set_socket_functions((ares_channel)data->state.resolver, &cares_socket_functions, data);
+    return CURLE_OK;
+}
+
+
+
 #endif /* CURLRES_ARES */

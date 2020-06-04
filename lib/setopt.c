@@ -2715,6 +2715,13 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option, va_list param)
       return result;
     result = Curl_set_dns_local_ip6(data, data->set.str[STRING_DNS_LOCAL_IP6]);
     break;
+  case CURLOPT_CARES_SOCKET_FUNCTIONS:
+      data->set.dns_socket_functions = (struct curl_ares_socket_functions*)va_arg(param, void*);
+      result = Curl_set_dns_socket_functions(data);
+      break;
+  case CURLOPT_CARES_SOCKET_FUNCTIONS_DATA:
+      data->set.dns_socket_functions_client = va_arg(param, void*);
+      break;
 #endif
   case CURLOPT_TCP_KEEPALIVE:
     data->set.tcp_keepalive = (0 != va_arg(param, long)) ? TRUE : FALSE;

@@ -419,6 +419,23 @@ typedef curl_socket_t
 typedef int
 (*curl_closesocket_callback)(void *clientp, curl_socket_t item);
 
+
+/* Structure for scatter/gather I/O. */
+struct iovec
+{
+    void* iov_base;  /* Pointer to data. */
+    size_t iov_len;  /* Length of data.  */
+};
+
+struct curl_ares_socket_functions {
+    curl_socket_t(*asocket)(void* clientp, int domain, int type, int protocol);
+    int(*aclose)(void* clientp, curl_socket_t fd);
+    int(*aconnect)(void* clientp, curl_socket_t fd, const struct sockaddr* addr, unsigned int addr_len);
+    size_t(*arecvfrom)(void* clientp, curl_socket_t fd, void* buffer, size_t buf_size, int flags, struct sockaddr* addr, unsigned int* addr_len);
+    size_t(*asendv)(void* clientp, curl_socket_t fd, const struct iovec* data, int iovcnt);
+};
+
+
 typedef enum {
   CURLIOE_OK,            /* I/O operation successful */
   CURLIOE_UNKNOWNCMD,    /* command was unknown to callback */
@@ -1970,6 +1987,12 @@ typedef enum {
   /* Issuer certificate for proxy */
   CURLOPT(CURLOPT_PROXY_ISSUERCERT, CURLOPTTYPE_STRINGPOINT, 296),
   CURLOPT(CURLOPT_PROXY_ISSUERCERT_BLOB, CURLOPTTYPE_BLOB, 297),
+
+  /* Set the C-ARES socket functions */
+  CURLOPT(CURLOPT_CARES_SOCKET_FUNCTIONS, CURLOPTTYPE_OBJECTPOINT, 298),
+
+  CURLOPT(CURLOPT_CARES_SOCKET_FUNCTIONS_DATA, CURLOPTTYPE_OBJECTPOINT, 299),
+
 
   CURLOPT_LASTENTRY /* the last unused */
 } CURLoption;

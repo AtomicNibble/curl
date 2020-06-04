@@ -1639,6 +1639,9 @@ struct UserDefined {
                                              socket */
   void *closesocket_client;
 
+  void* dns_socket_functions_client; /* pointer to pass to the dns socket callbacks */
+  struct curl_ares_socket_functions* dns_socket_functions; /* pointer to dns socket functions */
+
   void *seek_client;    /* pointer to pass to the seek callback */
   /* the 3 curl_conv_callback functions below are used on non-ASCII hosts */
   /* function to convert from the network encoding: */
