@@ -219,6 +219,12 @@ CURLcode Curl_set_dns_interface(struct Curl_easy *data,
 
 /*
  * Function provided by the resolver backend to set
+ * socket functions to use for DNS requests
+ */
+CURLcode Curl_set_dns_socket_functions(struct Curl_easy* data);
+
+/*
+ * Function provided by the resolver backend to set
  * local IPv4 address to use as source address for DNS requests
  */
 CURLcode Curl_set_dns_local_ip4(struct Curl_easy *data,
