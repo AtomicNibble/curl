@@ -421,11 +421,7 @@ typedef int
 
 
 /* Structure for scatter/gather I/O. */
-struct iovec
-{
-    void* iov_base;  /* Pointer to data. */
-    size_t iov_len;  /* Length of data.  */
-};
+struct iovec;
 
 struct curl_ares_socket_functions {
     curl_socket_t(*asocket)(void* clientp, int domain, int type, int protocol);
